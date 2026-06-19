@@ -1,1 +1,1 @@
-streamlit-gsheets
+streamlit_gsheets
