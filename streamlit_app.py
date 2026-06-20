@@ -1,5 +1,6 @@
 import streamlit as st
-from streamlit_sheets_connection import GSheetsConnection
+from streamlit_gsheets import GSheetsConnection
+
 
 
 
