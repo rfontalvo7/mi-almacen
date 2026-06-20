@@ -1,9 +1,14 @@
+import os
+import sys
+
+# Forzar la instalación de la librería si la plataforma se confunde
+try:
+    from streamlit_gsheets import GSheetsConnection
+except ModuleNotFoundError:
+    os.system(f"{sys.executable} -m pip install st-gsheets-connection")
+    from streamlit_gsheets import GSheetsConnection
+
 import streamlit as st
-from streamlit_gsheets import GSheetsConnection
-
-
-
-
 import pandas as pd
 from datetime import datetime
 
@@ -36,17 +41,12 @@ with tab1:
             if mat_prog.strip() == "":
                 st.error("⚠️ Por favor escribe el nombre del material.")
             else:
-                # Crear la nueva fila de datos
                 nueva_fila = pd.DataFrame([{
                     "Fecha": fecha_hoy,
                     "Material": mat_prog,
                     "Cantidad Esperada": cant_prog
                 }])
-                
-                # Juntar datos viejos con el nuevo
                 df_actualizado = pd.concat([df_existente, nueva_fila], ignore_index=True)
-                
-                # Guardar directamente en Google Sheets
                 conn.update(worksheet="Programacion", data=df_actualizado)
                 st.success(f"✅ ¡{mat_prog} guardado correctamente en la nube!")
                 st.balloons()
