@@ -11,8 +11,8 @@ st.write(f"**Fecha de operación:** `{fecha_hoy}`")
 
 tab1, tab2, tab3 = st.tabs(["📋 Programación", "📩 Registrar Entrada", "📊 Comparativo"])
 
-# Tu enlace de Google Sheets corregido para exportar datos directamente
-CSV_URL = "https://google.com"
+# Tu enlace de Apps Script oficial para guardar sin bloqueos de Google
+URL_CONEXION = "https://script.google.com/macros/s/AKfycbymjnkcyUxBCvkDyeHLav38mSQ1SY3reZ2QrAptSJGJ9YAtbw3ZrY0DSr_f5qItXIVH/exec"
 
 with tab1:
     st.subheader("1. Cargar Programación del Día")
@@ -26,14 +26,20 @@ with tab1:
             if mat_prog.strip() == "":
                 st.error("⚠️ Por favor escribe el nombre del material.")
             else:
-                # Método alternativo de envío directo por Webhook/Form
-                # Para escribir de forma pública y segura sin JSON de cuenta de servicio:
-                sheet_id = "1c9zMN1SCtcXUtnrFl96-jVdTAnQEdACB5klhRuQuKs"
+                # Paquete de datos estructurado para enviar a tu Google Sheets
+                datos = {
+                    "fecha": fecha_hoy,
+                    "material": mat_prog,
+                    "cantidad": int(cant_prog)
+                }
                 
-                # Formamos la petición para agregar datos simulando el envío
                 try:
-                    # Usamos una estructura limpia para actualizar mediante la API de visualización de datos de Google o aviso de éxito simulado en lo que estructuramos las celdas
-                    st.success(f"✅ ¡{mat_prog} procesado! Para habilitar la escritura directa de Google, ingresa el ID correcto.")
-                    st.balloons()
+                    # Envío directo por internet
+                    respuesta = requests.post(URL_CONEXION, json=datos)
+                    if respuesta.status_code == 200:
+                        st.success(f"✅ ¡{mat_prog} guardado correctamente en tu Google Sheets!")
+                        st.balloons()
+                    else:
+                        st.error("⚠️ La hoja no respondió correctamente. Verifica el Apps Script.")
                 except Exception as e:
                     st.error(f"Error de comunicación: {e}")
